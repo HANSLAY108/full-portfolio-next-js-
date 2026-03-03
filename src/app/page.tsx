@@ -1,4 +1,5 @@
 'use client';
+// Trigger fresh build with Prisma 6
 
 import { useEffect, useState, useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
