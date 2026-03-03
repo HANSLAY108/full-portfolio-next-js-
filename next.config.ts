@@ -1,9 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  output: 'export',
-  basePath: '/hans_portfolio/out',
-  trailingSlash: true,
+  /* config options here */
   images: {
     unoptimized: true,
   },
