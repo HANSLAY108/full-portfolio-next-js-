@@ -55,11 +55,11 @@ async function main() {
             id: 'contact',
             email: 'hans_lay@portfolio.com',
             phone: '+1 (555) 123-4567',
-            socialLinks: {
+            socialLinks: JSON.stringify({
                 twitter: 'https://twitter.com/hans_lay',
                 github: 'https://github.com/hans_lay',
                 linkedin: 'https://linkedin.com/in/hans_lay',
-            },
+            }),
         },
     })
 
@@ -100,7 +100,7 @@ async function main() {
     // 6. Initial SEO
     const pages = ['home', 'projects', 'about', 'contact']
     for (const page of pages) {
-        await prisma.sEO.upsert({
+        await prisma.seo.upsert({
             where: { page },
             update: {},
             create: {
