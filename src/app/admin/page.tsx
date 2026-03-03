@@ -21,9 +21,9 @@ export default function DashboardPage() {
     useEffect(() => {
         const loadStats = async () => {
             try {
-                const projects = await fetchAPI('/projects/index.php');
+                const projects = await fetchAPI('/projects');
                 const published = projects.filter((p: any) => p.status === 'PUBLISHED').length;
-                const featured = projects.filter((p: any) => p.featured == 1).length;
+                const featured = projects.filter((p: any) => p.featured === true || p.featured === 1).length;
 
                 // Transform fetched data into the format expected by the JSX
                 const newStats = [

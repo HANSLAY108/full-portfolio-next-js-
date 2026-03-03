@@ -19,16 +19,14 @@ export default function LoginPage() {
         setError("");
 
         try {
-            const data = await fetchAPI('/auth/login.php', {
+            const data = await fetchAPI('/auth/login', {
                 method: 'POST',
                 body: JSON.stringify({ email, password }),
             });
 
-            if (data.token) {
-                localStorage.setItem("auth_token", data.token);
-                localStorage.setItem("user", JSON.stringify(data.user));
-                router.push("/admin");
-            }
+            // Native API uses HTTP-only cookies, no need to store token in localStorage
+            localStorage.setItem("user", JSON.stringify(data.user));
+            router.push("/admin");
         } catch (err: any) {
             setError(err.message || "Invalid credentials. Please try again.");
         } finally {

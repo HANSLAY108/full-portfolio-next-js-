@@ -27,8 +27,8 @@ export default function HomePage() {
     const loadData = async () => {
       try {
         const [homeData, projectsData] = await Promise.all([
-          fetchAPI('/content/fetch.php?type=home'),
-          fetchAPI('/projects/index.php'),
+          fetchAPI('/content?type=home'),
+          fetchAPI('/projects'),
         ]);
         setContent(homeData);
         setProjects(
@@ -185,7 +185,7 @@ export default function HomePage() {
                   marginBottom: '1.5rem',
                 }}
               >
-                {content?.hero_title_line2 || 'Creative Developer'}
+                {content?.heroTitle || 'Creative Developer'}
               </motion.p>
 
               {/* Supporting copy */}
@@ -302,7 +302,7 @@ export default function HomePage() {
                   animate={{ y: [0, -14, 0] }}
                   transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
                 >
-                  {content?.hero_image ? (
+                  {content?.heroImage ? (
                     /* ── Portrait with cinematic fade-blend mask ── */
                     <div style={{ position: 'relative', display: 'inline-block', width: '100%' }}>
                       {/* Depth glow behind torso */}
@@ -323,7 +323,7 @@ export default function HomePage() {
 
                       {/* The portrait image with CSS mask fade */}
                       <Image
-                        src={content.hero_image}
+                        src={content.heroImage}
                         alt="TOH HANSLAY – Portfolio"
                         width={1000}
                         height={1200}
@@ -517,7 +517,7 @@ export default function HomePage() {
               >
                 <div className="relative h-64 overflow-hidden">
                   <Image
-                    src={project.image_url}
+                    src={project.imageUrl}
                     alt={project.title}
                     fill
                     className="object-cover group-hover:scale-110 transition-transform duration-700"

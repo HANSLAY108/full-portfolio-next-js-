@@ -39,7 +39,7 @@ export default function ImageUpload({ value, onChange, label = "Project Visual" 
 
             // Using fetch directly for multipart/form-data as fetchAPI is configured for JSON
             const token = localStorage.getItem('auth_token');
-            const response = await fetch('/hans_portfolio/api/upload.php', {
+            const response = await fetch('/api/upload', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`

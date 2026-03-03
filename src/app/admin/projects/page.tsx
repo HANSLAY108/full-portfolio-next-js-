@@ -31,7 +31,7 @@ export default function ProjectsAdmin() {
     const loadProjects = async () => {
         setLoading(true);
         try {
-            const data = await fetchAPI('/projects/index.php');
+            const data = await fetchAPI('/projects');
             setProjects(data);
         } catch (error) {
             console.error("Failed to load projects", error);
@@ -47,7 +47,7 @@ export default function ProjectsAdmin() {
     const handleDelete = async (id: string) => {
         if (!confirm('Are you sure you want to delete this project?')) return;
         try {
-            await fetchAPI(`/projects/delete.php?id=${id}`);
+            await fetchAPI(`/cms/projects?id=${id}`, { method: 'DELETE' });
             loadProjects();
         } catch (error) {
             alert('Failed to delete project');
@@ -104,7 +104,7 @@ export default function ProjectsAdmin() {
                             <GlassCard key={project.id} className="p-4 flex flex-col md:flex-row items-center gap-6 group">
                                 <div className="w-full md:w-48 h-32 rounded-2xl overflow-hidden shrink-0 border border-white/5">
                                     <img
-                                        src={project.image_url}
+                                        src={project.imageUrl}
                                         alt={project.title}
                                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                                     />
@@ -117,7 +117,7 @@ export default function ProjectsAdmin() {
                                             }`}>
                                             {project.status}
                                         </span>
-                                        {project.featured == 1 && (
+                                        {(project.featured === true || project.featured === 1) && (
                                             <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-purple-500/10 text-purple-400 border border-purple-500/20">
                                                 Featured
                                             </span>

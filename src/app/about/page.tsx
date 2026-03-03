@@ -16,7 +16,7 @@ export default function AboutPage() {
     useEffect(() => {
         const loadData = async () => {
             try {
-                const data = await fetchAPI('/content/fetch.php?type=about');
+                const data = await fetchAPI('/content?type=about');
                 setContent(data);
             } catch (error) {
                 console.error('Failed to load about content:', error);
@@ -50,8 +50,8 @@ export default function AboutPage() {
 
                         <div className="grid grid-cols-2 gap-6">
                             {[
-                                { label: "Experience", value: `${content?.years_experience || 8}+`, icon: <Zap className="w-4 h-4" /> },
-                                { label: "Projects", value: `${content?.projects_completed || 120}+`, icon: <Code className="w-4 h-4" /> },
+                                { label: "Experience", value: `${content?.yearsExperience || 8}+`, icon: <Zap className="w-4 h-4" /> },
+                                { label: "Projects", value: `${content?.projectsCompleted || 120}+`, icon: <Code className="w-4 h-4" /> },
                                 { label: "Clients", value: `${content?.clients || 85}+`, icon: <Globe className="w-4 h-4" /> },
                                 { label: "Awards", value: "12", icon: <Award className="w-4 h-4" /> },
                             ].map((stat, i) => (

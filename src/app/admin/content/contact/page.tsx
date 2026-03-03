@@ -21,7 +21,7 @@ export default function ContactContentAdmin() {
     useEffect(() => {
         const loadData = async () => {
             try {
-                const data = await fetchAPI('/content/fetch.php?type=contact');
+                const data = await fetchAPI('/content?type=contact');
                 if (data) {
                     setFormData({
                         email: data.email || '',
@@ -57,8 +57,8 @@ export default function ContactContentAdmin() {
         e.preventDefault();
         setSaving(true);
         try {
-            await fetchAPI('/content/update.php?type=contact', {
-                method: 'POST',
+            await fetchAPI('/cms/content?type=contact', {
+                method: 'PUT',
                 body: JSON.stringify(formData),
             });
             alert('Contact info updated successfully');

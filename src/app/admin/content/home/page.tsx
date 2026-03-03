@@ -23,14 +23,14 @@ export default function HomeContentAdmin() {
     useEffect(() => {
         const loadData = async () => {
             try {
-                const data = await fetchAPI('/content/fetch.php?type=home');
+                const data = await fetchAPI('/content?type=home');
                 if (data) {
                     setFormData({
-                        heroTitle: data.hero_title || '',
-                        heroSubtitle: data.hero_subtitle || '',
-                        heroImage: data.hero_image || '',
-                        ctaPrimary: data.cta_primary || '',
-                        cta_secondary: data.cta_secondary || ''
+                        heroTitle: data.heroTitle || '',
+                        heroSubtitle: data.heroSubtitle || '',
+                        heroImage: data.heroImage || '',
+                        ctaPrimary: data.ctaPrimary || '',
+                        cta_secondary: data.ctaSecondary || ''
                     });
                 }
             } catch (error) {
@@ -55,8 +55,8 @@ export default function HomeContentAdmin() {
                 ctaSecondary: formData.cta_secondary
             };
 
-            await fetchAPI('/content/update.php?type=home', {
-                method: 'POST',
+            await fetchAPI('/cms/content?type=home', {
+                method: 'PUT',
                 body: JSON.stringify(payload),
             });
             alert('Home content updated successfully');

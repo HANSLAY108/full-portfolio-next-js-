@@ -31,10 +31,10 @@ export default function ProjectForm({ isOpen, onClose, onSuccess, project }: Pro
             setFormData({
                 title: project.title || '',
                 description: project.description || '',
-                imageUrl: project.image_url || '',
+                imageUrl: project.imageUrl || '',
                 tags: project.tags || '',
                 status: project.status || 'PUBLISHED',
-                featured: project.featured == 1
+                featured: project.featured === true || project.featured === 1
             });
         } else {
             setFormData({
@@ -53,11 +53,12 @@ export default function ProjectForm({ isOpen, onClose, onSuccess, project }: Pro
         setLoading(true);
 
         try {
-            const endpoint = project ? '/projects/update.php' : '/projects/create.php';
+            const endpoint = '/cms/projects';
+            const method = project ? 'PUT' : 'POST';
             const payload = project ? { ...formData, id: project.id } : formData;
 
             await fetchAPI(endpoint, {
-                method: 'POST',
+                method,
                 body: JSON.stringify(payload),
             });
 

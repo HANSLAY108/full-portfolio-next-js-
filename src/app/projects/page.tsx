@@ -21,7 +21,7 @@ export default function ProjectsPage() {
     useEffect(() => {
         const loadProjects = async () => {
             try {
-                const data = await fetchAPI('/projects/index.php');
+                const data = await fetchAPI('/projects');
                 // Assuming data is an array of project objects
                 setProjects(data.filter((p: any) => p.status === 'PUBLISHED'));
             } catch (error) {

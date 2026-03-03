@@ -13,11 +13,19 @@ import Link from 'next/link';
 export default function ContactPage() {
     const [content, setContent] = useState<any>(null);
     const [loading, setLoading] = useState(true);
+    const [submitting, setSubmitting] = useState(false);
+    const [submitStatus, setSubmitStatus] = useState<{ type: 'success' | 'error', message: string } | null>(null);
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        subject: '',
+        message: ''
+    });
 
     useEffect(() => {
         const loadData = async () => {
             try {
-                const data = await fetchAPI('/content/fetch.php?type=contact');
+                const data = await fetchAPI('/content?type=contact');
                 setContent(data);
             } catch (error) {
                 console.error('Failed to load contact info:', error);
@@ -27,6 +35,30 @@ export default function ContactPage() {
         };
         loadData();
     }, []);
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setSubmitting(true);
+        setSubmitStatus(null);
+
+        try {
+            const res = await fetch('/api/contact', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData),
+            });
+            const data = await res.json();
+
+            if (!res.ok) throw new Error(data.error || 'Failed to send message');
+
+            setSubmitStatus({ type: 'success', message: 'Transmission successful. I will respond shortly.' });
+            setFormData({ name: '', email: '', subject: '', message: '' });
+        } catch (error: any) {
+            setSubmitStatus({ type: 'error', message: error.message });
+        } finally {
+            setSubmitting(false);
+        }
+    };
 
     if (loading) return null;
 
@@ -92,27 +124,71 @@ export default function ContactPage() {
 
                     <div className="lg:col-span-7">
                         <GlassCard className="p-10">
-                            <form className="space-y-8">
+                            <form onSubmit={handleSubmit} className="space-y-8">
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                     <div className="space-y-3">
                                         <label className="text-[10px] font-black uppercase tracking-widest text-[var(--foreground-muted)] ml-4">Full Name</label>
-                                        <input type="text" className="w-full bg-[var(--search-bg)] border border-[var(--nav-border)] rounded-2xl p-4 focus:outline-none focus:ring-2 focus:ring-purple-500/30 transition-all font-medium text-[var(--foreground)]" placeholder="Toh Hans" />
+                                        <input
+                                            type="text"
+                                            required
+                                            value={formData.name}
+                                            onChange={e => setFormData({ ...formData, name: e.target.value })}
+                                            className="w-full bg-[var(--search-bg)] border border-[var(--nav-border)] rounded-2xl p-4 focus:outline-none focus:ring-2 focus:ring-purple-500/30 transition-all font-medium text-[var(--foreground)]"
+                                            placeholder="Toh Hans"
+                                        />
                                     </div>
                                     <div className="space-y-3">
                                         <label className="text-[10px] font-black uppercase tracking-widest text-[var(--foreground-muted)] ml-4">Email Address</label>
-                                        <input type="email" className="w-full bg-[var(--search-bg)] border border-[var(--nav-border)] rounded-2xl p-4 focus:outline-none focus:ring-2 focus:ring-purple-500/30 transition-all font-medium text-[var(--foreground)]" placeholder="hello@example.com" />
+                                        <input
+                                            type="email"
+                                            required
+                                            value={formData.email}
+                                            onChange={e => setFormData({ ...formData, email: e.target.value })}
+                                            className="w-full bg-[var(--search-bg)] border border-[var(--nav-border)] rounded-2xl p-4 focus:outline-none focus:ring-2 focus:ring-purple-500/30 transition-all font-medium text-[var(--foreground)]"
+                                            placeholder="hello@example.com"
+                                        />
                                     </div>
                                 </div>
                                 <div className="space-y-3">
                                     <label className="text-[10px] font-black uppercase tracking-widest text-[var(--foreground-muted)] ml-4">Subject</label>
-                                    <input type="text" className="w-full bg-[var(--search-bg)] border border-[var(--nav-border)] rounded-2xl p-4 focus:outline-none focus:ring-2 focus:ring-purple-500/30 transition-all font-medium text-[var(--foreground)]" placeholder="How can I help you?" />
+                                    <input
+                                        type="text"
+                                        value={formData.subject}
+                                        onChange={e => setFormData({ ...formData, subject: e.target.value })}
+                                        className="w-full bg-[var(--search-bg)] border border-[var(--nav-border)] rounded-2xl p-4 focus:outline-none focus:ring-2 focus:ring-purple-500/30 transition-all font-medium text-[var(--foreground)]"
+                                        placeholder="How can I help you?"
+                                    />
                                 </div>
                                 <div className="space-y-3">
                                     <label className="text-[10px] font-black uppercase tracking-widest text-[var(--foreground-muted)] ml-4">Your Message</label>
-                                    <textarea rows={6} className="w-full bg-[var(--search-bg)] border border-[var(--nav-border)] rounded-2xl p-6 focus:outline-none focus:ring-2 focus:ring-purple-500/30 transition-all font-medium resize-none text-[var(--foreground)]" placeholder="Tell me about your project..."></textarea>
+                                    <textarea
+                                        rows={6}
+                                        required
+                                        value={formData.message}
+                                        onChange={e => setFormData({ ...formData, message: e.target.value })}
+                                        className="w-full bg-[var(--search-bg)] border border-[var(--nav-border)] rounded-2xl p-6 focus:outline-none focus:ring-2 focus:ring-purple-500/30 transition-all font-medium resize-none text-[var(--foreground)]"
+                                        placeholder="Tell me about your project..."
+                                    ></textarea>
                                 </div>
-                                <FuturisticButton className="w-full h-16" icon={<Send className="w-4 h-4" />}>
-                                    Transmit Message
+
+                                {submitStatus && (
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        className={`p-4 rounded-2xl text-xs font-bold ${submitStatus.type === 'success' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20'
+                                            }`}
+                                    >
+                                        {submitStatus.message}
+                                    </motion.div>
+                                )}
+
+                                <FuturisticButton
+                                    type="submit"
+                                    disabled={submitting}
+                                    className="w-full h-16"
+                                    icon={submitting ? <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}><Send className="w-4 h-4" /></motion.div> : <Send className="w-4 h-4" />}
+                                >
+                                    {submitting ? 'Transmitting...' : 'Transmit Message'}
                                 </FuturisticButton>
                             </form>
                         </GlassCard>

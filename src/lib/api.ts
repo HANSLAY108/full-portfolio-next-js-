@@ -1,4 +1,4 @@
-export const API_BASE_URL = '/hans_portfolio/api';
+export const API_BASE_URL = '/api';
 
 export const fetchAPI = async (endpoint: string, options: RequestInit = {}) => {
     const token = localStorage.getItem('auth_token');

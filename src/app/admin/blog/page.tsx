@@ -19,8 +19,8 @@ export default function BlogAdmin() {
     const load = async () => {
         setLoading(true);
         try {
-            const data = await fetchAPI('/blog/all.php');
-            setPosts(data);
+            const data = await fetchAPI('/blog');
+            setPosts(data.posts || []); // Adjust if /api/blog returns {posts, pagination}
         } catch (e) {
             console.error(e);
         } finally {
@@ -33,7 +33,7 @@ export default function BlogAdmin() {
     const handleDelete = async (id: string) => {
         if (!confirm('Delete this post permanently?')) return;
         try {
-            await fetchAPI(`/blog/delete.php?id=${id}`);
+            await fetchAPI(`/cms/blog?id=${id}`, { method: 'DELETE' });
             load();
         } catch {
             alert('Delete failed');
@@ -43,7 +43,7 @@ export default function BlogAdmin() {
     const handleToggleStatus = async (post: any) => {
         const newStatus = post.status === 'published' ? 'draft' : 'published';
         try {
-            await fetchAPI('/blog/update.php', { method: 'POST', body: JSON.stringify({ ...post, status: newStatus }) });
+            await fetchAPI('/cms/blog', { method: 'PUT', body: JSON.stringify({ ...post, status: newStatus }) });
             load();
         } catch {
             alert('Status update failed');
@@ -132,13 +132,13 @@ export default function BlogAdmin() {
                                             <div className="flex flex-wrap items-center gap-2 mb-1">
                                                 <h3 className="text-base font-bold truncate">{post.title}</h3>
                                                 <span className={`px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest ${post.status === 'published'
-                                                        ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                                                        : 'bg-orange-500/10 text-orange-400 border border-orange-500/20'
+                                                    ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                                                    : 'bg-orange-500/10 text-orange-400 border border-orange-500/20'
                                                     }`}>{post.status}</span>
                                             </div>
                                             <p className="text-gray-500 text-xs font-mono">/blog/{post.slug}</p>
                                             <p className="text-gray-600 text-[10px] mt-0.5">
-                                                {new Date(post.created_at).toLocaleDateString()}
+                                                {new Date(post.createdAt).toLocaleDateString()}
                                             </p>
                                         </div>
 
@@ -147,8 +147,8 @@ export default function BlogAdmin() {
                                             <button
                                                 onClick={() => handleToggleStatus(post)}
                                                 className={`p-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-colors ${post.status === 'published'
-                                                        ? 'bg-orange-500/10 text-orange-400 border-orange-500/20 hover:bg-orange-500/20'
-                                                        : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/20'
+                                                    ? 'bg-orange-500/10 text-orange-400 border-orange-500/20 hover:bg-orange-500/20'
+                                                    : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/20'
                                                     }`}
                                                 title={post.status === 'published' ? 'Unpublish' : 'Publish'}
                                             >

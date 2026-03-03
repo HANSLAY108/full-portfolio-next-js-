@@ -4,88 +4,109 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
 }
 
+
 model BlogPost {
-  id              String             @id @default(cuid()) @db.VarChar(255)
-  title           String             @db.VarChar(255)
-  slug            String             @unique(map: "slug") @db.VarChar(255)
-  excerpt         String?            @db.Text
-  content         String?            @db.LongText
-  featuredImage   String?            @map("featured_image") @db.VarChar(500)
-  status          blog_posts_status? @default(draft)
-  metaTitle       String?            @map("meta_title") @db.VarChar(255)
-  metaDescription String?            @map("meta_description") @db.Text
-  createdAt       DateTime           @default(now()) @map("created_at") @db.Timestamp(0)
-  updatedAt       DateTime           @default(now()) @updatedAt @map("updated_at") @db.Timestamp(0)
+  id              String   @id @default(cuid())
+  title           String
+  slug            String   @unique
+  excerpt         String?  @db.Text
+  content         String?  @db.Text
+  featuredImage   String?  @map("featured_image")
+  status          String   @default("draft") // draft, published
+  metaTitle       String?  @map("meta_title")
+  metaDescription String?  @map("meta_description") @db.Text
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
 
   @@map("blog_posts")
 }
 
-model about_content {
-  id                 String  @id @default("about") @db.VarChar(50)
-  bio                String? @db.Text
-  years_experience   Int?
-  projects_completed Int?
-  clients            Int?
+model AboutContent {
+  id                String  @id @default("about")
+  bio               String? @db.Text
+  yearsExperience   Int?    @map("years_experience")
+  projectsCompleted Int?    @map("projects_completed")
+  clients           Int?
+
+  @@map("about_content")
 }
 
-model contact_info {
-  id           String  @id @default("contact") @db.VarChar(50)
-  email        String? @db.VarChar(255)
-  phone        String? @db.VarChar(255)
-  social_links String? @db.LongText
+model ContactInfo {
+  id          String  @id @default("contact")
+  email       String?
+  phone       String?
+  socialLinks String? @map("social_links") @db.Text
+
+  @@map("contact_info")
 }
 
-model home_content {
-  id            String  @id @default("home") @db.VarChar(50)
-  hero_title    String? @db.VarChar(255)
-  hero_subtitle String? @db.Text
-  hero_image    String? @db.VarChar(255)
-  cta_primary   String? @db.VarChar(255)
-  cta_secondary String? @db.VarChar(255)
+model HomeContent {
+  id           String  @id @default("home")
+  heroTitle    String? @map("hero_title")
+  heroSubtitle String? @map("hero_subtitle") @db.Text
+  heroImage    String? @map("hero_image")
+  ctaPrimary   String? @map("cta_primary")
+  ctaSecondary String? @map("cta_secondary")
+
+  @@map("home_content")
 }
 
-model projects {
-  id          String   @id @db.VarChar(255)
-  title       String   @db.VarChar(255)
+model Project {
+  id          String   @id @default(cuid())
+  title       String
   description String?  @db.Text
-  image_url   String?  @db.VarChar(255)
+  imageUrl    String?  @map("image_url")
   featured    Boolean? @default(false)
-  status      String?  @default("DRAFT") @db.VarChar(50)
+  status      String?  @default("DRAFT")
   tags        String?  @db.Text
-  created_at  DateTime @default(now()) @db.Timestamp(0)
-  updated_at  DateTime @default(now()) @db.Timestamp(0)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @default(now()) @map("updated_at")
+
+  @@map("projects")
 }
 
-model seo {
-  id               String  @id @db.VarChar(255)
-  page             String  @unique(map: "page") @db.VarChar(255)
-  meta_title       String? @db.VarChar(255)
-  meta_description String? @db.Text
+model Seo {
+  id              String  @id @default(cuid())
+  page            String  @unique
+  metaTitle       String? @map("meta_title")
+  metaDescription String? @map("meta_description") @db.Text
+
+  @@map("seo")
 }
 
-model services {
-  id          String   @id @db.VarChar(255)
-  title       String   @db.VarChar(255)
+model Service {
+  id          String   @id @default(cuid())
+  title       String
   description String?  @db.Text
-  icon        String?  @default("Zap") @db.VarChar(100)
-  sort_order  Int?     @default(0)
-  created_at  DateTime @default(now()) @db.Timestamp(0)
-  updated_at  DateTime @default(now()) @db.Timestamp(0)
+  icon        String?  @default("Zap")
+  sortOrder   Int?     @default(0) @map("sort_order")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @default(now()) @map("updated_at")
+
+  @@map("services")
 }
 
-model users {
-  id            String   @id @db.VarChar(255)
-  name          String   @db.VarChar(255)
-  email         String   @unique(map: "email") @db.VarChar(255)
-  password_hash String   @db.VarChar(255)
-  role          String?  @default("ADMIN") @db.VarChar(50)
-  created_at    DateTime @default(now()) @db.Timestamp(0)
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  role         String?  @default("ADMIN")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@map("users")
 }
 
-enum blog_posts_status {
-  draft
-  published
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String?
+  message   String   @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("contact_messages")
 }

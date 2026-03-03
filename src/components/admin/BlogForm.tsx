@@ -13,8 +13,8 @@ interface BlogFormProps {
 }
 
 const EMPTY: any = {
-    title: '', excerpt: '', content: '', featured_image: '',
-    status: 'draft', meta_title: '', meta_description: '',
+    title: '', excerpt: '', content: '', featuredImage: '',
+    status: 'draft', metaTitle: '', metaDescription: '',
 };
 
 export default function BlogForm({ isOpen, onClose, post, onSuccess }: BlogFormProps) {
@@ -38,13 +38,14 @@ export default function BlogForm({ isOpen, onClose, post, onSuccess }: BlogFormP
         try {
             const formData = new FormData();
             formData.append('image', file);
-            const res = await fetch('/hans_portfolio/api/upload.php', {
+            // Assuming we'll have a native upload handler or maintain the PHP one for now
+            // But let's point it to a future native one
+            const res = await fetch('/api/upload', {
                 method: 'POST',
-                headers: { Authorization: `Bearer ${localStorage.getItem('auth_token')}` },
                 body: formData,
             });
             const data = await res.json();
-            if (data.url) set('featured_image', data.url);
+            if (data.url) set('featuredImage', data.url);
         } catch {
             alert('Image upload failed');
         } finally {
@@ -58,9 +59,9 @@ export default function BlogForm({ isOpen, onClose, post, onSuccess }: BlogFormP
         setSaving(true);
         try {
             if (isEditing) {
-                await fetchAPI('/blog/update.php', { method: 'POST', body: JSON.stringify({ ...form, id: post.id }) });
+                await fetchAPI('/cms/blog', { method: 'PUT', body: JSON.stringify({ ...form, id: post.id }) });
             } else {
-                await fetchAPI('/blog/create.php', { method: 'POST', body: JSON.stringify(form) });
+                await fetchAPI('/cms/blog', { method: 'POST', body: JSON.stringify(form) });
             }
             onSuccess();
         } catch (err: any) {
@@ -109,8 +110,8 @@ export default function BlogForm({ isOpen, onClose, post, onSuccess }: BlogFormP
                         {/* Preview */}
                         {preview ? (
                             <div className="p-8">
-                                {form.featured_image && (
-                                    <img src={form.featured_image} alt="" className="w-full h-56 object-cover rounded-2xl mb-6" />
+                                {form.featuredImage && (
+                                    <img src={form.featuredImage} alt="" className="w-full h-56 object-cover rounded-2xl mb-6" />
                                 )}
                                 <h1 className="text-3xl font-black mb-4">{form.title || 'Untitled'}</h1>
                                 {form.excerpt && <p className="text-gray-400 mb-6 italic">{form.excerpt}</p>}
@@ -167,8 +168,8 @@ export default function BlogForm({ isOpen, onClose, post, onSuccess }: BlogFormP
                                     <label className="label-sm">Featured Image</label>
                                     <div className="flex items-center gap-3 mt-1">
                                         <input
-                                            value={form.featured_image}
-                                            onChange={e => set('featured_image', e.target.value)}
+                                            value={form.featuredImage}
+                                            onChange={e => set('featuredImage', e.target.value)}
                                             placeholder="https://... or upload below"
                                             className="admin-input flex-1"
                                         />
@@ -178,8 +179,8 @@ export default function BlogForm({ isOpen, onClose, post, onSuccess }: BlogFormP
                                             <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
                                         </label>
                                     </div>
-                                    {form.featured_image && (
-                                        <img src={form.featured_image} alt="preview" className="mt-2 h-24 rounded-xl object-cover" />
+                                    {form.featuredImage && (
+                                        <img src={form.featuredImage} alt="preview" className="mt-2 h-24 rounded-xl object-cover" />
                                     )}
                                 </div>
 
@@ -205,11 +206,11 @@ export default function BlogForm({ isOpen, onClose, post, onSuccess }: BlogFormP
                                     <div className="mt-3 space-y-4 pl-1">
                                         <div>
                                             <label className="label-sm">Meta Title</label>
-                                            <input value={form.meta_title} onChange={e => set('meta_title', e.target.value)} className="admin-input mt-1" placeholder="Defaults to post title" />
+                                            <input value={form.metaTitle} onChange={e => set('metaTitle', e.target.value)} className="admin-input mt-1" placeholder="Defaults to post title" />
                                         </div>
                                         <div>
                                             <label className="label-sm">Meta Description</label>
-                                            <textarea value={form.meta_description} onChange={e => set('meta_description', e.target.value)} rows={2} className="admin-input mt-1 resize-none" placeholder="160 chars max" maxLength={160} />
+                                            <textarea value={form.metaDescription} onChange={e => set('metaDescription', e.target.value)} rows={2} className="admin-input mt-1 resize-none" placeholder="160 chars max" maxLength={160} />
                                         </div>
                                     </div>
                                 </details>

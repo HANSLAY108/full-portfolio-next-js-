@@ -21,12 +21,12 @@ export default function AboutContentAdmin() {
     useEffect(() => {
         const loadData = async () => {
             try {
-                const data = await fetchAPI('/content/fetch.php?type=about');
+                const data = await fetchAPI('/content?type=about');
                 if (data) {
                     setFormData({
                         bio: data.bio || '',
-                        yearsExperience: data.years_experience || 8,
-                        projectsCompleted: data.projects_completed || 120,
+                        yearsExperience: data.yearsExperience || 8,
+                        projectsCompleted: data.projectsCompleted || 120,
                         clients: data.clients || 85
                     });
                 }
@@ -43,8 +43,8 @@ export default function AboutContentAdmin() {
         e.preventDefault();
         setSaving(true);
         try {
-            await fetchAPI('/content/update.php?type=about', {
-                method: 'POST',
+            await fetchAPI('/cms/content?type=about', {
+                method: 'PUT',
                 body: JSON.stringify(formData),
             });
             alert('About content updated successfully');

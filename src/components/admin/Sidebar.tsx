@@ -43,8 +43,12 @@ export default function Sidebar() {
         }
     }, []);
 
-    const handleLogout = () => {
-        localStorage.removeItem("auth_token");
+    const handleLogout = async () => {
+        try {
+            await fetch('/api/auth/logout', { method: 'POST' });
+        } catch (e) {
+            console.error("Logout failed", e);
+        }
         localStorage.removeItem("user");
         router.push("/admin/login");
     };

@@ -19,9 +19,13 @@ export default function SEOAdmin() {
             try {
                 // In a real app, we might have multiple pages in the SEO table
                 // For now, we fetch one for 'home' as a placeholder or list
-                const homeSEO = await fetchAPI('/content/fetch.php?type=seo&page=home');
+                const homeSEO = await fetchAPI('/content?type=seo&page=home');
                 setPages([homeSEO]);
-                setSelectedPage(homeSEO);
+                setSelectedPage({
+                    ...homeSEO,
+                    metaTitle: homeSEO.metaTitle || '',
+                    metaDescription: homeSEO.metaDescription || ''
+                });
             } catch (error) {
                 console.error("Failed to load SEO data", error);
             } finally {
@@ -35,8 +39,8 @@ export default function SEOAdmin() {
         e.preventDefault();
         setSaving(true);
         try {
-            await fetchAPI('/content/update.php?type=seo', {
-                method: 'POST',
+            await fetchAPI('/cms/content?type=seo', {
+                method: 'PUT',
                 body: JSON.stringify(selectedPage),
             });
             alert('SEO configuration updated');
@@ -81,8 +85,8 @@ export default function SEOAdmin() {
                                         <input
                                             type="text"
                                             className="w-full bg-white/5 border border-white/5 rounded-2xl p-6 focus:outline-none focus:ring-2 focus:ring-purple-500/30 transition-all text-xl font-bold tracking-tight"
-                                            value={selectedPage?.meta_title || ''}
-                                            onChange={e => setSelectedPage({ ...selectedPage, meta_title: e.target.value })}
+                                            value={selectedPage?.metaTitle || ''}
+                                            onChange={e => setSelectedPage({ ...selectedPage, metaTitle: e.target.value })}
                                         />
                                     </div>
 
@@ -91,8 +95,8 @@ export default function SEOAdmin() {
                                         <textarea
                                             rows={6}
                                             className="w-full bg-white/5 border border-white/5 rounded-2xl p-6 focus:outline-none focus:ring-2 focus:ring-purple-500/30 transition-all font-medium resize-none text-gray-400"
-                                            value={selectedPage?.meta_description || ''}
-                                            onChange={e => setSelectedPage({ ...selectedPage, meta_description: e.target.value })}
+                                            value={selectedPage?.metaDescription || ''}
+                                            onChange={e => setSelectedPage({ ...selectedPage, metaDescription: e.target.value })}
                                         />
                                     </div>
 
@@ -117,13 +121,13 @@ export default function SEOAdmin() {
                                 </h3>
                                 <div className="space-y-4">
                                     <div className="text-blue-400 text-xl font-medium leading-tight truncate">
-                                        {selectedPage?.meta_title || 'Untitled Page'}
+                                        {selectedPage?.metaTitle || 'Untitled Page'}
                                     </div>
                                     <div className="text-emerald-600 text-sm truncate">
                                         hansportfolio.com › {selectedPage?.page || 'home'}
                                     </div>
                                     <div className="text-gray-400 text-sm line-clamp-2">
-                                        {selectedPage?.meta_description || 'No description provided.'}
+                                        {selectedPage?.metaDescription || 'No description provided.'}
                                     </div>
                                 </div>
                             </div>
