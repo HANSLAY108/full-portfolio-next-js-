@@ -15,17 +15,13 @@ export async function GET() {
             env: process.env.NODE_ENV,
         });
     } catch (error: any) {
-        console.error('Database Health Check Failed:', {
-            message: error.message,
-            code: error.code,
-            meta: error.meta,
-        });
-
         return NextResponse.json({
             status: 'error',
-            message: 'Database connection or schema issue',
-            details: error.message,
+            message: 'Diagnostic Check Failed',
+            error: error.message,
             code: error.code,
+            database_url_present: !!process.env.DATABASE_URL,
+            hint: "Please ensure DATABASE_URL is set in Vercel Project Settings > Environment Variables."
         }, { status: 500 });
     }
 }
