@@ -1,0 +1,320 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --background: #f8fafc;
+    --foreground: #020617;
+    --foreground-muted: #64748b;
+
+    /* Brand Colors (Final V3) */
+    --brand-blue: #0ea5e9;
+    --brand-blue-hover: #0284c7;
+    --brand-blue-soft: #f0f9ff;
+    --soft-gray: #f1f5f9;
+
+    /* Specific UI Elements */
+    --nav-bg: rgba(248, 250, 252, 0.8);
+    --nav-border: transparent;
+    --tag-bg: #ffffff;
+    --footer-bg: #ffffff;
+    --accent-blue: #38bdf8;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    @apply antialiased selection:bg-blue-100 selection:text-blue-900;
+  }
+}
+
+@layer utilities {
+  .glass {
+    background-color: var(--glass-bg);
+    backdrop-filter: blur(24px);
+    border: 1px solid var(--glass-border);
+  }
+
+  .glass-card {
+    background-color: var(--glass-bg);
+    backdrop-filter: blur(24px);
+    border: 1px solid var(--glass-border);
+    border-radius: 2rem;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .text-glow {
+    text-shadow: 0 0 10px rgba(168, 85, 247, 0.3);
+  }
+
+  .pearlescent {
+    background: linear-gradient(135deg,
+        rgba(255, 255, 255, 0.05) 0%,
+        rgba(168, 85, 247, 0.03) 25%,
+        rgba(59, 130, 246, 0.03) 50%,
+        rgba(16, 185, 129, 0.03) 75%,
+        rgba(255, 255, 255, 0.05) 100%);
+    background-size: 400% 400%;
+    animation: gradient-shift 15s ease infinite;
+  }
+
+  .text-highlight-bold {
+    font-weight: 900;
+    letter-spacing: -0.05em;
+    color: var(--foreground);
+  }
+
+  .focal-circle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100vw;
+    height: 100vw;
+    max-width: 800px;
+    max-height: 800px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 70%);
+    border: 1px solid rgba(0, 0, 0, 0.03);
+    border-radius: 50%;
+    z-index: 0;
+  }
+
+  .service-card-floating {
+    background: white;
+    border-radius: 1rem;
+    padding: 0.75rem;
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.02);
+    transition: all 0.3s ease;
+  }
+
+  .service-card-floating:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.1);
+  }
+
+  .animate-float {
+    animation: float 8s ease-in-out infinite;
+  }
+
+  .mask-gradient-b {
+    mask-image: linear-gradient(to bottom, black 75%, transparent 100%);
+  }
+
+  .animate-float-delayed {
+    animation: float-delayed 10s ease-in-out infinite;
+  }
+
+  .animate-slow-spin {
+    animation: slow-spin 25s linear infinite;
+  }
+
+  .animate-slow-spin-reverse {
+    animation: slow-spin 30s linear infinite reverse;
+  }
+
+  /* ── Blog rich-text content ── */
+  .prose-custom {
+    color: #000000;
+    font-size: 1rem;
+    line-height: 1.85;
+  }
+
+  .prose-custom h1,
+  .prose-custom h2,
+  .prose-custom h3,
+  .prose-custom h4 {
+    color: #000000;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .prose-custom h1 {
+    font-size: 2rem;
+  }
+
+  .prose-custom h2 {
+    font-size: 1.5rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    padding-bottom: 0.5rem;
+  }
+
+  .prose-custom h3 {
+    font-size: 1.25rem;
+  }
+
+  .prose-custom p {
+    margin-bottom: 1.25rem;
+  }
+
+  .prose-custom a {
+    color: #a78bfa;
+    text-decoration: underline;
+  }
+
+  .prose-custom a:hover {
+    color: #c4b5fd;
+  }
+
+  .prose-custom ul,
+  .prose-custom ol {
+    padding-left: 1.5rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .prose-custom li {
+    margin-bottom: 0.4rem;
+  }
+
+  .prose-custom blockquote {
+    border-left: 3px solid #7c3aed;
+    padding-left: 1rem;
+    color: #334155;
+    font-style: italic;
+    margin: 1.5rem 0;
+  }
+
+  .prose-custom code {
+    background: rgba(139, 92, 246, 0.12);
+    color: #c4b5fd;
+    padding: 0.15em 0.4em;
+    border-radius: 4px;
+    font-size: 0.875em;
+  }
+
+  .prose-custom pre {
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 12px;
+    padding: 1.25rem;
+    overflow-x: auto;
+    margin: 1.5rem 0;
+  }
+
+  .prose-custom pre code {
+    background: transparent;
+    padding: 0;
+    color: #e2e8f0;
+  }
+
+  .prose-custom img {
+    border-radius: 12px;
+    margin: 1.5rem 0;
+    max-width: 100%;
+  }
+
+  .prose-custom hr {
+    border-color: rgba(0, 0, 0, 0.1);
+    margin: 2rem 0;
+  }
+
+  /* ── Admin form inputs ── */
+  .admin-input {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 1rem;
+    padding: 12px 16px;
+    color: #f1f5f9;
+    font-size: 0.875rem;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .admin-input:focus {
+    border-color: rgba(139, 92, 246, 0.5);
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.12);
+  }
+
+  .admin-input option {
+    background: #1a1a2e;
+    color: #f1f5f9;
+  }
+
+  .label-sm {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #6b7280;
+  }
+
+  /* ── No-scrollbar utility ── */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* ── Dark glassmorphism vars used by admin ── */
+  :root {
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.06);
+    --blob-opacity: 0.08;
+    --search-bg: rgba(255, 255, 255, 0.03);
+    --card-hover-bg: rgba(255, 255, 255, 0.06);
+  }
+}
+
+@layer base {
+  * {
+    border-color: var(--border-color);
+  }
+}
+
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(-20px) rotate(2deg);
+  }
+
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+}
+
+@keyframes float-delayed {
+  0% {
+    transform: translateY(0px) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(20px) rotate(-2deg);
+  }
+
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+}
+
+@keyframes slow-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}

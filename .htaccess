@@ -1,0 +1,16 @@
+Options +FollowSymLinks
+RewriteEngine On
+
+# Next.js Static Export fixes for XAMPP/Apache
+# Map __next.[folder].[file].txt to __next.[folder]/[file].txt
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^out/(.+)/__next\.([^\.]+)\.([^\.]+)\.txt$ out/$1/__next.$2/$3.txt [L,QSA]
+
+# Fix for root level __next files if any
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^out/__next\.([^\.]+)\.([^\.]+)\.txt$ out/__next.$1/$2.txt [L,QSA]
+
+# Handle trailing slashes for clean URLs in subfolder
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}\.html -f
+RewriteRule ^out/(.+)/$ out/$1.html [L]
