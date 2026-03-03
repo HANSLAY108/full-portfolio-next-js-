@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma';
 import { Resend } from 'resend';
 import { z } from 'zod';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Moved Resend instantiation inside POST to avoid build-time errors when API key is missing
 
 const contactSchema = z.object({
     name: z.string().min(2, "Name is too short"),
@@ -42,6 +42,7 @@ export async function POST(request: Request) {
 
         // 2. Send Email via Resend
         if (process.env.RESEND_API_KEY) {
+            const resend = new Resend(process.env.RESEND_API_KEY);
             await resend.emails.send({
                 from: process.env.EMAIL_FROM || 'onboarding@resend.dev',
                 to: process.env.EMAIL_TO || 'tohhanslay@gmail.com',
